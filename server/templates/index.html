@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joke Server Dashboard</title>
+    <link rel="stylesheet" href="/templates/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Joke Server Dashboard</h1>
+        <div class="stats">
+            <p>📝 Jokes Sent: <span id="jokesSent">0</span></p>
+            <p>✅ Translations Received: <span id="translationsReceived">0</span></p>
+            <p>⏱️ Avg Translation Time (s): <span id="translationTime">0</span></p>
+        </div>
+
+        <table class="joke-table" id="jokeTable">
+            <thead>
+                <tr>
+                    <th>Original Joke</th>
+                    <th>Translated Joke</th>
+                    <th>Time Taken (s)</th>
+                </tr>
+            </thead>
+            <tbody id="jokeList">
+                <!-- Jokes and translations will be appended here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const ws = new WebSocket("ws://" + location.host + "/status");
+
+        ws.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+
+            // Update summary stats
+            document.getElementById("jokesSent").textContent = Array.isArray(data.jokes_sent) ? data.jokes_sent.length : data.jokes_sent || 0;
+            document.getElementById("translationsReceived").textContent = Array.isArray(data.translations_received) ? data.translations_received.length : data.translations_received || 0;
+            document.getElementById("translationTime").textContent = Array.isArray(data.avg_translation_time) ? 
+                (data.avg_translation_time.length > 0 ? (data.avg_translation_time.reduce((a, b) => a + b, 0) / data.avg_translation_time.length).toFixed(4) : 0) : 
+                data.avg_translation_time || 0;
+
+            // Handle stats message with arrays to populate table
+            if (Array.isArray(data.jokes_sent) && Array.isArray(data.translations_received) && Array.isArray(data.avg_translation_time)) {
+                const jokeList = document.getElementById("jokeList");
+                jokeList.innerHTML = ""; // Clear existing entries
+                const len = Math.min(data.jokes_sent.length, data.translations_received.length, data.avg_translation_time.length);
+                for (let i = len - 1; i >= 0; i--) { // Add in reverse to show newest first
+                    const entry = document.createElement("tr");
+                    entry.innerHTML = `
+                        <td>${data.jokes_sent[i]}</td>
+                        <td>${data.translations_received[i]}</td>
+                        <td>${data.avg_translation_time[i].toFixed(4)}</td>
+                    `;
+                    jokeList.appendChild(entry);
+                }
+            }
+
+            // Handle individual joke update
+            if (data.joke && data.translated && data.time_taken !== undefined) {
+                const jokeList = document.getElementById("jokeList");
+                const entry = document.createElement("tr");
+                entry.innerHTML = `
+                    <td>${data.joke}</td>
+                    <td>${data.translated}</td>
+                    <td>${data.time_taken.toFixed(4)}</td>
+                `;
+                jokeList.insertBefore(entry, jokeList.firstChild); // Add new entries at the top
+            }
+        };
+    </script>
+</body>
+</html>

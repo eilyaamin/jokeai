@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "client"
+version = "0.1.0"
+description = "WebSocket client that translates jokes"
+authors = ["eilya"]
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.10"
+websockets = "^12.0"
+aiohttp = "*"
+pytest = "*"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

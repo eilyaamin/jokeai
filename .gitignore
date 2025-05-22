@@ -1,0 +1,48 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Caches and logs
+*.log
+*.sqlite3
+*.db
+*.pid
+*.swp
+
+# Python virtual environments
+.env/
+.venv/
+venv/
+ENV/
+env/
+
+# Environment variables
+.env
+
+# VSCode settings
+.vscode/
+
+# Pytest cache
+.pytest_cache/
+**/.pytest_cache/
+
+# Poetry
+poetry.lock
+
+# Docker
+*.tar
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Ignore server/client build artifacts
+server/__pycache__/
+client/__pycache__/
+server/server_run.log
+client/client_run.log
+
+# Ignore test cache
+server/tests/__pycache__/
+client/tests/__pycache__/
