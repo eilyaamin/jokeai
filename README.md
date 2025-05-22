@@ -1,16 +1,16 @@
 # WebSocket Joke Translator
 
-This project is a demo system with a **FastAPI WebSocket server** that sends random jokes to clients, and a **Python client** that receives jokes, translates them to German using Google Translate, and sends the translations back. The server provides a live dashboard to monitor joke/translation activity and statistics.
+A demo system featuring a **FastAPI WebSocket server** that sends random jokes to clients, and a **Python client** that translates jokes to German using Google Translate and returns the translations. The server includes a live dashboard for monitoring activity and statistics.
 
 ---
 
 ## Features
 
-- **FastAPI WebSocket Server**: Sends jokes to connected clients and receives translations.
+- **FastAPI WebSocket Server**: Sends jokes and receives translations from clients.
 - **OpenAI Integration**: Uses OpenAI's GPT-4o to generate random jokes.
 - **Live Dashboard**: Real-time stats and joke/translation history at [http://localhost:8000/](http://localhost:8000/).
-- **Python Client**: Connects to the server, translates jokes to German, and returns translations.
-- **Dockerized**: Easy to run both server and client with Docker Compose.
+- **Python Client**: Connects to the server, translates jokes to German, and sends back translations.
+- **Dockerized**: Easily run both server and client with Docker Compose.
 
 ---
 
@@ -41,7 +41,7 @@ This project is a demo system with a **FastAPI WebSocket server** that sends ran
 ### 1. Clone the Repository
 
 ```sh
-git clone repo
+git clone <repo>
 cd websockets
 ```
 
@@ -66,10 +66,16 @@ GEMINI_API_KEY="sk-..."
 
 ### Using Docker Compose
 
-This will build and start both the server and client containers.
+**On the first run**, build the images with:
 
 ```sh
 docker-compose up --build
+```
+
+For subsequent runs, start the server and client containers with:
+
+```sh
+docker-compose up
 ```
 
 - The **server** will be available at [http://localhost:8000/](http://localhost:8000/)
@@ -77,7 +83,7 @@ docker-compose up --build
 
 ### Stopping
 
-Press `Ctrl+C` in the terminal, then:
+Press `Ctrl+C` in the terminal, then run:
 
 ```sh
 docker-compose down
@@ -88,17 +94,14 @@ docker-compose down
 ## How It Works
 
 1. **Server**:
-
    - Generates a random joke using OpenAI.
-   - Sends the joke to the client via WebSocket (`/ws` endpoint).
+   - Sends the joke to the client via the `/ws` WebSocket endpoint.
    - Receives the translated joke from the client.
    - Updates the dashboard with stats and history.
 2. **Client**:
-
    - Connects to the server's `/ws` WebSocket endpoint.
    - Receives jokes, translates them to German using Google Translate, and sends translations back.
 3. **Dashboard**:
-
    - Visit [http://localhost:8000/](http://localhost:8000/) to see live stats and joke/translation history.
 
 ---
